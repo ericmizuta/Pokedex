@@ -1,21 +1,29 @@
-import React from 'react'
+import React from 'react';
+import { IParsedPokemon } from '../interface/ParsedPokemon';
 
-const PokemonCard = () => {
-    return (
-        <div className='w-full bg-slate-200 rounded-lg shadow-md flex flex-col items-center gap-4 p-6'>
-            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" alt="Bulbasaur" />
-
-            <div className='flex items-center gap-2'>
-                <span>#1</span>
-                <span>Bulbasaur</span>
-            </div>
-
-            <div className='flex items-center gap-2'>
-                <span className='bg-slate-700 text-white p-2 font-semibold rounded'>GRASS</span>
-                <span className='bg-slate-700 text-white p-2 font-semibold rounded'>POISON</span>
-            </div>
-        </div>
-    )
+interface IProps {
+  data: IParsedPokemon;
 }
 
-export default PokemonCard
+const PokemonCard = ({ data }: IProps) => {
+  return (
+    <div className='w-full bg-slate-200 rounded-lg shadow-md flex flex-col items-center gap-4 p-6'>
+      <img src={data.sprite} alt='Bulbasaur' />
+
+      <div className='flex items-center gap-1'>
+        <span className=''>#{data.id}</span>
+        <span className='capitalize font-semibold text-xl'>{data.name}</span>
+      </div>
+
+      <div className='flex items-center gap-2'>
+        {data.types.map((type) => (
+          <span className='bg-slate-700 text-white p-2 font-semibold rounded uppercase'>
+            {type}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PokemonCard;
