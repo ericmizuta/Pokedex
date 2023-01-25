@@ -1,21 +1,24 @@
 import { graphql } from '@apollo/client/react/hoc';
-import {GET_POKEMON} from './endpoint/queries/queries'
+import { GET_POKEMON } from './endpoint/queries/queries';
 
 import { useState, useEffect } from 'react';
 import PokemonCard from './components/PokemonCard';
 import SearchBar from './components/SearchBar';
 import { IParsedPokemon } from './interface/ParsedPokemon';
-import { PokemonHome } from './interface/PokemonHome';
+import React from 'react';
+import { NetworkStatus } from '@apollo/client';
 
-function App(props:any) {
-  const [pokemons, setPokemons] = useState<IParsedPokemon[]>();
+const App = (props: any) => {
+  const { pokemon_v2_pokemonspecies, loading, networkStatus } = props.data;
 
-  console.log(props.data)
-  const {pokemon_v2_pokemonspecies} = props.data
-  console.log(pokemon_v2_pokemonspecies)
+  const [pokemons, setPokemons] = useState<IParsedPokemon[]>([]);
 
-  const parseJSON = (input: PokemonHome) => {
-    const parsedData = input.data.pokemon_v2_pokemonspecies.map((value) => ({
+  console.log(props);
+
+  console.log(pokemons);
+
+  const parseJSON = () => {
+    const parsedData = pokemon_v2_pokemonspecies.map((value) => ({
       id: value.id,
       name: value.name,
       color: value.pokemon_v2_pokemoncolor.name,
@@ -30,15 +33,25 @@ function App(props:any) {
     setPokemons(parsedData);
   };
 
+  useEffect(() => {
+    if (networkStatus === NetworkStatus.ready) {
+      // debugger;
+      parseJSON();
+    }
+  }, [loading]);
+
   return (
     <main className='flex flex-col gap-6 items-center p-6 w-full min-h-screen'>
       <SearchBar />
 
       <div className='grid gap-4 w-full'>
-        {pokemons && pokemons.map((pokemon) => <PokemonCard data={pokemon} />)}
+        {pokemons.length !== 0 &&
+          pokemons.map((pokemon) => (
+            <PokemonCard key={pokemon.id} data={pokemon} />
+          ))}
       </div>
     </main>
   );
 };
 
-export default App
+export default graphql(GET_POKEMON)(App);

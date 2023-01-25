@@ -16,8 +16,11 @@ const PokemonCard = ({ data }: IProps) => {
       </div>
 
       <div className='flex items-center gap-2'>
-        {data.types.map((type) => (
-          <span className='bg-slate-700 text-white p-2 font-semibold rounded uppercase'>
+        {data.types.map((type, index) => (
+          <span
+            key={index}
+            className='bg-slate-700 text-white p-2 font-semibold rounded uppercase'
+          >
             {type}
           </span>
         ))}
